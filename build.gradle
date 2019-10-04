@@ -1,0 +1,28 @@
+
+plugins {
+    id 'java'
+    id 'idea'
+}
+
+group 'AutomationBesstPractices'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+test {
+    useJUnitPlatform()
+}
+
+dependencies {
+    testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
+    testCompile("io.github.bonigarcia:webdrivermanager:3.7.1")
+    testCompile("io.github.bonigarcia:selenium-jupiter:3.3.1")
+    testImplementation "org.testcontainers:junit-jupiter:1.12.0"
+    testCompile "org.testcontainers:selenium:1.12.1"
+
+}
