@@ -20,7 +20,7 @@ public class SeleniumHeadlessTest extends BaseSeleniumTest {
     }
 
 
-    @Test()
+    @Test
     @RepeatedTest(5)
     void seleniumTest_Headless() {
         ChromeOptions chromeOptions = new ChromeOptions();
