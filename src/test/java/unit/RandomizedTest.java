@@ -41,7 +41,7 @@ public class RandomizedTest {
         EasyRandom easyRandom = new EasyRandom(params);
 
         Person person = easyRandom.nextObject(Person.class);
-        boolean expectedFreeAccess = false;
+        boolean expectedFreeAccess = true;
 
         //ACT
         final boolean actualFreeAccess = AcessService.haveFreeAccess(person);
