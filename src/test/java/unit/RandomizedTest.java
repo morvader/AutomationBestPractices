@@ -21,7 +21,7 @@ public class RandomizedTest {
         Person person = new Person(faker.name().fullName(),
                 faker.number().numberBetween(0, 17), null);
 
-        boolean expectedFreeAccess = true;
+        boolean expectedFreeAccess = false;
 
         //ACT
         final boolean actualFreeAccess = AcessService.haveFreeAccess(person);
