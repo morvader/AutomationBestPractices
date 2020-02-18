@@ -1,39 +1,64 @@
 package e2e;
 
+import e2e.SeleniumUtils.BaseSeleniumTest;
 import e2e.SeleniumUtils.LocalStorage;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.jupiter.api.AfterEach;
+import io.github.bonigarcia.seljup.Arguments;
+import io.github.bonigarcia.seljup.SeleniumExtension;
+import io.restassured.http.Cookies;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import org.junit.jupiter.api.extension.RegisterExtension;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
+import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SeleniumAPICalls {
+public class SeleniumAPICalls extends BaseSeleniumTest {
 
-    final String url = "https://www.alimerkaonline.es/ali-web/index.html";
+    final String authorListUrl = "https://thepulper.herokuapp.com/apps/pulp/gui/reports/authors/list/navigation";
 
-    WebDriver driver;
+    final String createAuthorUrl = "https://thepulper.herokuapp.com/apps/pulp/gui/create/author";
+
+    @RegisterExtension
+    static SeleniumExtension seleniumExtension = new SeleniumExtension();
+
+    LocalStorage localStorage;
 
     @Test
-    void loadChartFirts() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        final LocalStorage localStorage = new LocalStorage(driver);
+    void checkAuthorsList(@Arguments("--headless") ChromeDriver driver) {
+        driver.get(authorListUrl);
 
-        driver.get(url);
-        localStorage.setItemInLocalStorage("__amplify__cliente", "{\"data\":{\"id_cliente\":0,\"fechanacimiento\":null,\"cphabitual\":\"33008\",\"sexo\":0,\"iauthtoken\":\"d4dd0d98637b34c87b6e00907b447805dc77927d\",\"nombreCompleto\":\" \",\"carritoCompra\":{\"cesta\":{\"idCesta\":1495996,\"idTipoCesta\":1,\"nombre\":\"Cesta de la compra\",\"fcreacion\":1569786088000,\"articulos\":[],\"subtotal\":\"0,00\",\"total\":\"0,00\",\"descuento\":\"0,00\",\"recargoequivalencia\":0,\"detalledescuento\":[],\"numeroActualizacionCesta\":1,\"numeroProductos\":0}}},\"expires\":null}");
-        driver.get(url);
-        assertTrue(driver.findElement(By.id("btn-mi-carrito")).isDisplayed());
-    }
+        //Copy cookie
+        Set<Cookie> seleniumCookies = driver.manage().getCookies();
+        List restAssuredCookies = new ArrayList();
+        for (org.openqa.selenium.Cookie cookie : seleniumCookies) {
+            restAssuredCookies.add(new io.restassured.http.Cookie.Builder(cookie.getName(), cookie.getValue()).build());
+        }
 
-    @AfterEach
-    void tearDown() {
-        if (driver != null)
-            driver.quit();
+        String NewAuthor = "FRAN";
+
+        //Insert new author API
+        given()
+                .cookies(new Cookies(restAssuredCookies))
+                .formParam("name", NewAuthor)
+                .post(createAuthorUrl).then().statusCode(200);
+
+        driver.get(authorListUrl);
+
+        //Check new author is presents
+        List<WebElement> authorsList = driver.findElementsByCssSelector(".Authors-list-item");
+        boolean encontrado = false;
+        for (WebElement author : authorsList) {
+            encontrado = author.getText().contains(NewAuthor);
+            if (encontrado) break;
+        }
+
+        assertTrue(encontrado, "No se ha encontrado el autor buscado");
+
     }
 }
