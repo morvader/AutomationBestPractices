@@ -1,7 +1,6 @@
 package e2e;
 
 import e2e.SeleniumUtils.LocalStorage;
-import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
