@@ -5,8 +5,8 @@ import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
-import unit.classes.AcessService;
-import unit.classes.Person;
+import classes.AccessService;
+import classes.Person;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -24,7 +24,7 @@ public class RandomizedTest {
         boolean expectedFreeAccess = true;
 
         //ACT
-        final boolean actualFreeAccess = AcessService.haveFreeAccess(person);
+        final boolean actualFreeAccess = AccessService.haveFreeAccess(person);
 
         //ASSERT
         assertThat("Minors should have free access",
@@ -44,7 +44,7 @@ public class RandomizedTest {
         boolean expectedFreeAccess = true;
 
         //ACT
-        final boolean actualFreeAccess = AcessService.haveFreeAccess(person);
+        final boolean actualFreeAccess = AccessService.haveFreeAccess(person);
 
         //ASSERT
         assertThat("Minors should have free access",

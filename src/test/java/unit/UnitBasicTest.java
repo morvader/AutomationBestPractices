@@ -1,14 +1,17 @@
 package unit;
 
+import classes.AccessService;
+import classes.Person;
+import classes.RandomGen;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import unit.classes.AcessService;
-import unit.classes.Person;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class UnitBasicTest {
 
@@ -19,10 +22,31 @@ public class UnitBasicTest {
         boolean expectedFreeAccess = true;
 
         //ACT
-        final boolean actualFreeAccess = AcessService.haveFreeAccess(minor);
+        final boolean actualFreeAccess = AccessService.haveFreeAccess(minor);
 
         //ASSERT
         assertThat("Minors should have free access",
+                actualFreeAccess,
+                is(expectedFreeAccess));
+    }
+
+
+    @Test
+    void adults_could_have_freeAccess() throws Exception {
+        //ARRANGE
+        Person adult = new Person("John", 30, null);
+        boolean expectedFreeAccess = true;
+        RandomGen mockRandomGen = mock(RandomGen.class);
+
+        when(mockRandomGen.getRandomBool()).thenReturn(true);
+
+        AccessService accessService = new AccessService(mockRandomGen);
+
+        //ACT
+        final boolean actualFreeAccess = accessService.winFreeAccess(adult);
+
+        //ASSERT
+        assertThat("Adults could have free access",
                 actualFreeAccess,
                 is(expectedFreeAccess));
     }
@@ -34,7 +58,7 @@ public class UnitBasicTest {
 
         //ACT - ASSERT
         assertThrows(Exception.class, () -> {
-            AcessService.haveFreeAccess(minor);
+            AccessService.haveFreeAccess(minor);
         });
     }
 
@@ -46,7 +70,7 @@ public class UnitBasicTest {
         boolean expectedFreeAccess = true;
 
         //ACT
-        final boolean actualFreeAccess = AcessService.haveFreeAccess(minor);
+        final boolean actualFreeAccess = AccessService.haveFreeAccess(minor);
 
         //ASSERT
         assertThat("Minors should have free access",

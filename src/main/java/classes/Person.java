@@ -1,4 +1,4 @@
-package unit.classes;
+package classes;
 
 public class Person {
 
